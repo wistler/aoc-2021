@@ -3,23 +3,44 @@
 using namespace std;
 
 void runPart1(istream &ss) {
-	// TODO implement
-	int num, sum = 0;	
-	while (ss >> num) {
-		sum += num;
+	string dir;
+	int dist;
+	int horTotal = 0, depth = 0;
+	while (ss >> dir >> dist) {
+		if (dir == "forward") {
+			horTotal += dist;
+		} else if (dir == "down") {
+			depth += dist;
+		} else if (dir == "up") {
+			depth -= dist;
+		}
 	}
 
-	cout << "Part 1 | Sum = " << sum << endl;
+	cout << "Part 1 | Horizontal Distance = " << horTotal << endl
+		 << "       | Depth = " << depth << endl
+		 << "       | Product = " << horTotal * depth << endl;
 }
 
 void runPart2(istream& ss) {
-	// TODO implement
-	int num, sum = 0;
-	while (ss >> num) {
-		sum += num;
+	string dir;
+	int dist;
+	int horTotal = 0, depth = 0, aim = 0;
+	while (ss >> dir >> dist) {
+		if (dir == "forward") {
+			horTotal += dist;
+			depth += aim * dist;
+		}
+		else if (dir == "down") {
+			aim += dist;
+		}
+		else if (dir == "up") {
+			aim -= dist;
+		}
 	}
 
-	cout << "Part 2 | Sum = " << sum << endl;
+	cout << "Part 2 | Horizontal Distance = " << horTotal << endl
+		 << "       | Depth = " << depth << endl
+		 << "       | Product = " << horTotal * depth << endl;
 }
 
 void main()
@@ -28,16 +49,12 @@ void main()
 	cout << DAY << endl;
 
 	char testData[] = R"(
-		199
-		200
-		208
-		210
-		200
-		207
-		240
-		269
-		260
-		263
+		forward 5
+		down 5
+		forward 8
+		up 3
+		down 8
+		forward 2
 	)";
 
 	stringstream testDataStream(testData);
