@@ -19,3 +19,23 @@ string rtrim(const string& s)
 string trim(const string& s) {
 	return rtrim(ltrim(s));
 }
+
+string bin(long n, int w)
+{
+	string s = "0";
+	for (long i = 1 << w; i > 0; i = i / 2)
+	{
+		s += "01"[(n & i) != 0];
+	}
+	return s;
+}
+
+int bin2dec(string word)
+{
+	int d = 0;
+	for (int i = 0; i < word.size(); i++)
+	{
+		d = (d << 1) + (word[i] == '1');
+	}
+	return d;
+}
