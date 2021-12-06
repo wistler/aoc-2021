@@ -1,6 +1,4 @@
 ﻿#include "Day06.h"
-#include <tuple>
-#include <map>
 
 using namespace std;
 
@@ -15,6 +13,13 @@ bool contains(const vector<int>& vect, int num) {
 string str(vector<int>& vect) {
 	stringstream ss;
 	for each (int i in vect)
+		ss << i << ",";
+	return ss.str();
+}
+
+string bstr(vector<BIGINT>& vect) {
+	stringstream ss;
+	for each (BIGINT i in vect)
 		ss << i << ",";
 	return ss.str();
 }
@@ -36,6 +41,7 @@ bool operator < (const CacheKey& one, const CacheKey& two) {
 
 map<CacheKey, BIGINT> CACHE;
 
+// works for Part 1 only. Memory intensive and too many loops.
 vector<int> simFish(int& fishState, int steps, bool debug) {
 	vector<int> offsprings;
 	if (fishState >= steps) {
@@ -68,6 +74,7 @@ vector<int> simFish(int& fishState, int steps, bool debug) {
 	return offsprings;
 }
 
+// works for Part 2. Only keeping counts.
 BIGINT simFishCount(int fishState, int steps, bool debug) {
 	if (fishState >= steps) {
 		return 1; // no offsprings, just self
@@ -115,6 +122,33 @@ BIGINT simSchoolCount(vector<int> school, int steps, bool debug) {
 	return newSchoolCount;
 }
 
+/*
+  After solving Part 2 using the count method above, I check others solutions and 
+  liked the 'bucket' solution very much. So went back and added this other way:
+*/
+BIGINT simSchoolBuckets(vector<int> school, int steps) {
+	vector<BIGINT> buckets;
+	buckets.resize(9);
+
+	for each (int fish in school)
+		buckets[fish]++;
+
+	for (int s = 0; s < steps; s++)
+	{
+		BIGINT cycled = buckets[0];
+		for (int state = 0; state < 8; state++)
+			buckets[state] = buckets[state + 1];
+		buckets[6] += cycled;
+		buckets[8] = cycled;
+	}
+
+	BIGINT sum = 0;
+	for each (BIGINT bucket in buckets)
+		sum += bucket;
+
+	return sum;
+}
+
 void process(istream& ss, bool debug) {
 	vector<int> school;
 	
@@ -128,13 +162,14 @@ void process(istream& ss, bool debug) {
 		cout << "State 0: " << str(school) << endl;
 		for (int steps = 1; steps <= 18; steps++)
 		{
-			cout << "State " << steps << ": " << str(simSchool(school, steps, false)) << endl;
+			cout << "State " << steps << " : " << str(simSchool(school, steps, false)) << endl;
 		}
 		cout << "State " << 18 << ": " << simSchool(school, 18, false).size() << endl;
 	}
 	cout << "State " << 80 << ": " << simSchool(school, 80, false).size() << endl;
+	cout << "State " << 80 << ": " << simSchoolBuckets(school, 80) << endl;
 	cout << "State " << 256 << ": " << simSchoolCount(school, 256, false) << endl;
-	
+	cout << "State " << 256 << ": " << simSchoolBuckets(school, 256) << endl;
 }
 
 void main()
