@@ -4,6 +4,8 @@
 
 using namespace std;
 
+typedef unsigned long long BIGINT;
+
 bool contains(const vector<int>& vect, int num) {
 	for (int i = 0; i < vect.size(); i++)
 		if (vect[i] == num) return true;
@@ -28,35 +30,13 @@ struct CacheKey {
 	}
 };
 
-struct CacheValue {
-	int fishState;
-	vector<int> offsprings;
-
-	string str() {
-		char buff[200];
-		snprintf(buff, sizeof(buff), "value[%i,%s]", fishState, ::str(offsprings).c_str());
-		return string{ buff };
-	}
-};
-
 bool operator < (const CacheKey& one, const CacheKey& two) {
 	return std::tie(one.fishState, one.steps) < std::tie(two.fishState, two.steps);
 }
 
-map<CacheKey, CacheValue> CACHE;
+map<CacheKey, BIGINT> CACHE;
 
 vector<int> simFish(int& fishState, int steps, bool debug) {
-	
-	
-	CacheKey key{ fishState, steps };
-	map<CacheKey, CacheValue>::iterator it;
-	if ((it = CACHE.find(key)) != CACHE.end()) {
-		CacheValue ans = it->second;
-		// if (debug) cout << "simFish(): CACHED: " << key.str() << " -> " << it->second.str() << endl;
-		fishState = ans.fishState;
-		return ans.offsprings;
-	}
-
 	vector<int> offsprings;
 	if (fishState >= steps) {
 		// state 3, step 2 -> state 1, step 0
@@ -71,25 +51,43 @@ vector<int> simFish(int& fishState, int steps, bool debug) {
 		steps = steps - fishState;
 		fishState = 0;
 
-		//int cycles = steps / 7;
 		int remainder = steps % 7;
 		fishState = (7 - remainder) % 7; // end-state for this fish.
 
 		// for each cycle add one new offspring + its offsprings
-		for (;steps > 0; steps -= 7)
+		for (;steps > 0; steps -= 7) // NEEDS OPTIMIZATION
 		{
-			int oFishState = 8;
-			vector<int> itsOffsprings = simFish(oFishState, steps-1, debug);
+			int oFishState = 7 + 2;
+			vector<int> itsOffsprings = simFish(oFishState, steps, debug);
 
 			offsprings.push_back(oFishState);
 			for each (int oFo in itsOffsprings)
 				offsprings.push_back(oFo);
-		}		
+		}
 	}
-	CacheValue val = CacheValue{ fishState, offsprings };
-	if (debug) cout << "simFish(): -caching-: " << key.str() << endl; // << " -> " << val.str() << endl;
-	CACHE[key] = val;
 	return offsprings;
+}
+
+BIGINT simFishCount(int fishState, int steps, bool debug) {
+	if (fishState >= steps) {
+		return 1; // no offsprings, just self
+	}
+
+	CacheKey key{ fishState, steps };
+	auto it = CACHE.find(key);
+	if (it != CACHE.end()) {
+		return it->second;
+	}
+
+	BIGINT offsprings = 0;
+	steps = steps - fishState;
+	// for each cycle add one new offspring + its offsprings
+	for (; steps > 0; steps -= 7)
+		offsprings += simFishCount(8, steps-1, debug);
+
+	BIGINT val = 1 + offsprings;
+	CACHE[key] = val;
+	return val;
 }
 
 vector<int> simSchool(vector<int> school, int steps, bool debug) {
@@ -108,6 +106,14 @@ vector<int> simSchool(vector<int> school, int steps, bool debug) {
 	return newSchool;
 }
 
+BIGINT simSchoolCount(vector<int> school, int steps, bool debug) {
+	BIGINT newSchoolCount = 0;
+	for each (int fish in school)
+	{
+		newSchoolCount += simFishCount(fish, steps, debug);
+	}
+	return newSchoolCount;
+}
 
 void process(istream& ss, bool debug) {
 	vector<int> school;
@@ -124,11 +130,10 @@ void process(istream& ss, bool debug) {
 		{
 			cout << "State " << steps << ": " << str(simSchool(school, steps, false)) << endl;
 		}
-		//cout << "State " << 7 << ": " << str(simSchool(school, 7, true)) << endl;
-		//cout << "State " << 8 << ": " << str(simSchool(school, 8, true)) << endl;
 		cout << "State " << 18 << ": " << simSchool(school, 18, false).size() << endl;
 	}
 	cout << "State " << 80 << ": " << simSchool(school, 80, false).size() << endl;
+	cout << "State " << 256 << ": " << simSchoolCount(school, 256, false) << endl;
 	
 }
 
