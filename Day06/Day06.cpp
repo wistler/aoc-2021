@@ -10,20 +10,6 @@ bool contains(const vector<int>& vect, int num) {
 	return false;
 }
 
-string str(vector<int>& vect) {
-	stringstream ss;
-	for each (int i in vect)
-		ss << i << ",";
-	return ss.str();
-}
-
-string bstr(vector<BIGINT>& vect) {
-	stringstream ss;
-	for each (BIGINT i in vect)
-		ss << i << ",";
-	return ss.str();
-}
-
 struct CacheKey {
 	int fishState;
 	int steps;

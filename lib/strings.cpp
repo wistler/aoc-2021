@@ -1,4 +1,5 @@
 #include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -39,3 +40,12 @@ int bin2dec(string word)
 	}
 	return d;
 }
+
+string str(vector<int>& vect, string sep) {
+	stringstream ss;
+	for each (int i in vect)
+		ss << i << sep;
+	return ss.str();
+}
+
+string str(vector<int>& vect) { return str(vect, ","); }
