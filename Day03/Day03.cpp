@@ -29,8 +29,8 @@ void calculatePowerConsumption(istream &ss) {
 		epsilon += sums[i] < wordCount / 2;
 	}
 	
-	cout << "Part 1 | Gamma Rt.   = " << gamma << " \t| 0b" << bin(gamma, sums.size()) << endl
-		 << "       | Epsilon Rt. = " << epsilon << " \t| 0b" << bin(epsilon, sums.size()) << endl
+	cout << "Part 1 | Gamma Rt.   = " << gamma << " \t| 0b" << bin(gamma, (int) sums.size()) << endl
+		 << "       | Epsilon Rt. = " << epsilon << " \t| 0b" << bin(epsilon, (int) sums.size()) << endl
 		 << "       | Power Cons. = " << gamma * epsilon << endl;
 }
 
@@ -39,14 +39,14 @@ void calculateLifeSupportRate(istream& ss) {
 	string mcbFilter = "";
 	string lcbFilter = "";
 
-	const int resetPosition = ss.tellg();
+	const streamoff resetPosition = ss.tellg();
 	while (true) {
 		ss.clear();
 		ss.seekg(resetPosition);
 
 		int sum1 = 0, sum2 = 0;
 		int count1 = 0, count2 = 0;
-		int bit = mcbFilter.size();
+		size_t bit = mcbFilter.size();
 		// cout << "Bit: " << bit << endl;
 		while (ss >> word) {
 			if (word.rfind(mcbFilter, 0) == 0) {
