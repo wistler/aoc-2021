@@ -20,24 +20,21 @@ BIGINT sumOf(int n) {
 }
 
 template <typename F1>
-vector<int> findLeastCost(vector<int>& crabs, F1 costFn, bool debug) {
-	int minPos = -1, maxPos = -1;
-	for each (int i in crabs) {
-		if (minPos == -1 || minPos > i) minPos = i;
-		if (maxPos == -1 || maxPos < i) maxPos = i;
-	}
-	if (debug) cout << "dbg    | minP, maxP  : " << minPos << "," << maxPos << endl;
-
+tuple<int, int> minimize(F1 costFn, tuple<int, int> range, vector<int>& points, bool debug) {
 	int leastCost = -1;
 	int leastCostPos = -1;
-	for (int p = minPos; p <= maxPos; p++)
+	for (int p = get<0>(range); p <= get<1>(range); p++)
 	{
 		int cost = 0;
-		for each (int crab in crabs)
-		{
-			cost += costFn(crab, p);
+		stringstream dbg;
+		dbg << " // ";
+		for each (int pt in points) {
+			auto c = costFn(pt, p);
+			cost += c;
+			if (debug) dbg << c << ",";
 		}
-		if (debug) cout << "dbg    | pos, cost   : " << p << "," << cost << endl;
+
+		if (debug) cout << "dbg    | pos, cost   : " << p << "," << cost << dbg.str() << endl;
 		if (leastCost == -1 || leastCost > cost) {
 			leastCost = cost;
 			leastCostPos = p;
@@ -54,11 +51,21 @@ void process(istream& ss, bool debug) {
 			ss.ignore();
 	}
 
+	int minPos = -1, maxPos = -1;
+	for each (int i in crabs) {
+		if (minPos == -1 || minPos > i) minPos = i;
+		if (maxPos == -1 || maxPos < i) maxPos = i;
+	}
+	tuple<int, int> range{ minPos, maxPos };
+	if (debug) cout << "dbg    | minP, maxP  : " << minPos << "," << maxPos << endl;
+
 	auto linearCostFn = [](int a, int b) { return abs(a - b); };
 	auto crabCostFn = [](int a, int b) { return sumOf(abs(a - b)); };
 
-	cout << "Part 1 | Cheapest LINEAR Cost, Pos: " << str(findLeastCost(crabs, linearCostFn, debug), ", ") << endl << endl;
-	cout << "Part 2 | Cheapest  CRAB  Cost, Pos: " << str(findLeastCost(crabs, crabCostFn, debug), ", ") << endl;
+	tuple<int,int> minCost = minimize(linearCostFn, range, crabs, debug);
+	cout << "Part 1 | Cheapest LINEAR Cost, Pos: " << get<0>(minCost) << "," << get<1>(minCost) << endl << endl;
+	minCost = minimize(crabCostFn, range, crabs, debug);
+	cout << "Part 2 | Cheapest  CRAB  Cost, Pos: " << get<0>(minCost) << "," << get<1>(minCost) << endl;
 }
 
 void main()
