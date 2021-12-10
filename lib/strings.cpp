@@ -41,11 +41,13 @@ int bin2dec(string word)
 	return d;
 }
 
-string str(vector<int>& vect, string sep) {
+template <typename V1>
+string str(vector<V1>& vect, string sep) {
 	stringstream ss;
-	for each (int i in vect)
+	for each (V1 i in vect)
 		ss << i << sep;
 	return ss.str();
 }
 
-string str(vector<int>& vect) { return str(vect, ","); }
+template <typename V1>
+string str(vector<V1>& vect) { return str(vect, ","); }
