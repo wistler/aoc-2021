@@ -39,7 +39,7 @@ void genBasin(map<Coord, short>& heightMap, Coord pt, set<Coord>& basin, int deb
 int getBasinSize(map<Coord, short>& heightMap, Coord pt, int debug) {
 	set<Coord> basin;
 	genBasin(heightMap, pt, basin, debug);
-	return basin.size();
+	return (int) basin.size();
 }
 
 void process(istream& ss, int debug) {

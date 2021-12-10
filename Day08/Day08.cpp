@@ -125,7 +125,7 @@ void process(istream& ss, int debug) {
 
 				continue;
 			}
-			const int size = word.size();
+			const int size = (int) word.size();
 			if (beforeBreak) {
 				auto tup = make_tuple(word, getWires(word));
 				if (size == 2)
