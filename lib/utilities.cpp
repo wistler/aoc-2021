@@ -19,10 +19,12 @@ ifstream get_input_file(const string& f) {
 	string PROJECT_DIR = "../../../../";
 
 	ifstream input(PROJECT_DIR + f);
-	if (!input) {
+	ifstream input_alt(PROJECT_DIR + "../" + f);
+	if (!input && !input_alt) {
 		cout << "ERROR: Could not open input: " << f << endl
 			 << "PWD:" << get_working_path();
 		exit(1);
 	}
-	return input;
+	if (input) return input;
+	return input_alt;
 }
