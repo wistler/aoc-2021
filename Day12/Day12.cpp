@@ -106,6 +106,15 @@ int traverse(map<string, set<string>> &caveSystem, GraphNode *fromCave, F1 visit
 	return pathsToEnd;
 }
 
+int release(GraphNode* node) {
+	int nodeCount = 1;
+	for (GraphNode* child : node->next) {
+		nodeCount += release(child);
+	}
+	delete node;
+	return nodeCount;
+}
+
 void process(istream &ss, int debug)
 {
 	map<string, set<string>> caveSystem;
@@ -137,12 +146,15 @@ void process(istream &ss, int debug)
 			cout << endl;
 		}
 
-	GraphNode root{"start", NULL};
-	int paths1 = traverse(caveSystem, &root, canVisitPart1, debug);
+	GraphNode* root = new GraphNode{"start", NULL};
+	int paths1 = traverse(caveSystem, root, canVisitPart1, debug);
 	cout << "Part 1 | Count = " << paths1 << endl;
+	cout << "dbg    | Released nodes: " << release(root) << endl;
 
-	int paths2 = traverse(caveSystem, &root, canVisitPart2, debug);
+	GraphNode* root2 = new GraphNode{"start", NULL};
+	int paths2 = traverse(caveSystem, root2, canVisitPart2, debug);
 	cout << "Part 2 | Count = " << paths2 << endl;
+	cout << "dbg    | Released nodes: " << release(root2) << endl;
 }
 
 void main()
