@@ -6,36 +6,6 @@ using namespace std;
 typedef unsigned long long BIGINT;
 
 
-struct Coord {
-	int x, y;
-	string str() {
-		char buff[40];
-		snprintf(buff, sizeof(buff), "%i,%i", x, y);
-		return string{ buff };
-	}
-};
-
-bool operator < (const Coord& c1, const Coord& c2)
-{
-	return std::tie(c1.x, c1.y) < std::tie(c2.x, c2.y);
-}
-
-
-auto getNeighbors(Coord point) {
-	vector<Coord> neighbors{
-		Coord{ point.x - 1, point.y -1 },
-		Coord{ point.x - 1, point.y +0 },
-		Coord{ point.x - 1, point.y +1 },
-		Coord{ point.x + 0, point.y -1 },
-		// Coord{ point.x + 0, point.y +0 },
-		Coord{ point.x + 0, point.y +1 },
-		Coord{ point.x + 1, point.y -1 },
-		Coord{ point.x + 1, point.y +0 },
-		Coord{ point.x + 1, point.y +1 },
-	};
-	return neighbors;
-}
-
 void printMap(map<Coord, short>& octoMap, int& minX, int& maxX, int& minY, int& maxY) {
 	if (minX == -1) {
 		for each(auto entry in octoMap) {

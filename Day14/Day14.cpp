@@ -70,9 +70,11 @@ tuple<BIGINT, BIGINT> process(istream &ss, int debug)
 		linkCounts[string{ a,b }] = 0;
 	}
 
-	for each (auto rule in insertionRules)
-	{
-		cout << "dbg    | "  << rule.first << " -> " << str(rule.second) << endl;
+	if (debug) {
+		for each (auto rule in insertionRules)
+		{
+			cout << "dbg    | " << rule.first << " -> " << str(rule.second) << endl;
+		}
 	}
 
 	if (debug > 1) {

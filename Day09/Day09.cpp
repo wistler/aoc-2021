@@ -2,33 +2,10 @@
 
 using namespace std;
 
-struct Coord {
-	int x, y;
-	string str() {
-		char buff[40];
-		snprintf(buff, sizeof(buff), "%i,%i", x, y);
-		return string{ buff };
-	}
-};
-
-bool operator < (const Coord& c1, const Coord& c2)
-{
-	return std::tie(c1.x, c1.y) < std::tie(c2.x, c2.y);
-}
-
-auto getNeighbors(Coord point) {
-	vector<Coord> neighbors{
-		Coord{ point.x - 1, point.y },
-		Coord{ point.x + 1, point.y },
-		Coord{ point.x, point.y - 1 },
-		Coord{ point.x, point.y + 1 }
-	};
-	return neighbors;
-}
 
 void genBasin(map<Coord, short>& heightMap, Coord pt, set<Coord>& basin, int debug) {
 	basin.insert(pt);
-	for each (auto nc in getNeighbors(pt)) {
+	for each (auto nc in getNeighborsNoDiags(pt)) {
 		auto it = heightMap.find(nc);
 		if (it != heightMap.end() && it->second != 9 && basin.find(nc) == basin.end()) {
 			genBasin(heightMap, nc, basin, debug);

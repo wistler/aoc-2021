@@ -7,21 +7,6 @@ typedef unsigned long long BIGINT;
 
 const string DAY("Day13");
 
-struct Coord
-{
-	int x, y;
-	string str()
-	{
-		char buff[40];
-		snprintf(buff, sizeof(buff), "%i,%i", x, y);
-		return string{buff};
-	}
-};
-
-bool operator<(const Coord &c1, const Coord &c2)
-{
-	return std::tie(c1.x, c1.y) < std::tie(c2.x, c2.y);
-}
 
 void printMap(set<Coord> &points)
 {

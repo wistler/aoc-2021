@@ -2,20 +2,6 @@
 
 using namespace std;
 
-struct Coord {
-	int x, y;
-	string str() {
-		char buff[40];
-		snprintf(buff, sizeof(buff), "%i,%i", x, y);
-		return string{ buff };
-	}
-};
-
-bool operator < (const Coord& c1, const Coord& c2)
-{
-	return std::tie(c1.x, c1.y) < std::tie(c2.x, c2.y);
-}
-
 struct Line {
 	int x1, y1, x2, y2;
 	string str() {
