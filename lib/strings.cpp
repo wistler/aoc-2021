@@ -31,6 +31,14 @@ string bin(long n, int w)
 	return s;
 }
 
+string hexToBin(char ch) {
+	if (isdigit(ch)) {
+		return bin(ch - '0', 3).substr(1);
+	} else {
+		return bin(ch - 'A' + 10, 3).substr(1); // A - F
+	}
+}
+
 int bin2dec(string word)
 {
 	int d = 0;
